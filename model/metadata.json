@@ -1,0 +1,112 @@
+{
+  "numeric_features": {
+    "Age": {
+      "min": 5,
+      "max": 90
+    },
+    "BMI": {
+      "min": 14.0,
+      "max": 42.0
+    },
+    "Dosage_mg": {
+      "min": 4.0,
+      "max": 500.0
+    },
+    "Quantity": {
+      "min": 3,
+      "max": 90
+    },
+    "Duration_Days": {
+      "min": 1,
+      "max": 45
+    },
+    "Insurance_Pct": {
+      "min": 0,
+      "max": 100
+    },
+    "Discount_Pct": {
+      "min": 0,
+      "max": 100
+    }
+  },
+  "categorical_features": {
+    "Gender": [
+      "Female",
+      "Male",
+      "Other"
+    ],
+    "Chronic_Condition": [
+      "No",
+      "Yes"
+    ],
+    "Medicine_Name": [
+      "Amlodipine",
+      "Amoxicillin",
+      "Atorvastatin",
+      "Azithromycin",
+      "Clopidogrel",
+      "Clotrimazole",
+      "Gabapentin",
+      "Ibuprofen",
+      "Insulin",
+      "Losartan",
+      "Metformin",
+      "Montelukast",
+      "Mupirocin",
+      "Omeprazole",
+      "Pantoprazole",
+      "Paracetamol",
+      "Pregabalin",
+      "Salbutamol"
+    ],
+    "Category": [
+      "Analgesic",
+      "Antibiotic",
+      "Antidiabetic",
+      "Antihypertensive",
+      "Cardiac",
+      "Dermatological",
+      "Gastrointestinal",
+      "Neurological",
+      "Respiratory"
+    ],
+    "Type": [
+      "Capsule",
+      "Cream",
+      "Injection",
+      "Ointment",
+      "Tablet"
+    ],
+    "Generic_or_Branded": [
+      "Branded",
+      "Generic"
+    ],
+    "Manufacturer": [
+      "Abbott",
+      "Biocon",
+      "Cipla",
+      "Dr Reddy's",
+      "Glenmark",
+      "Lupin",
+      "Sun Pharma",
+      "USV"
+    ],
+    "Severity": [
+      "Mild",
+      "Moderate",
+      "Severe"
+    ],
+    "Treatment_Type": [
+      "Medication Only",
+      "Outpatient",
+      "Specialized Treatment"
+    ],
+    "Region": [
+      "Central",
+      "East",
+      "North",
+      "South",
+      "West"
+    ]
+  }
+}
