@@ -17,9 +17,9 @@ async function loadMetadata() {
   CATEGORICAL_SELECTS.forEach((name) => {
     const select = form.querySelector(`select[name="${name}"]`);
     const options = meta.categorical_features[name] || [];
-    select.innerHTML = options
-      .map((opt) => `<option value="${opt}">${opt}</option>`)
-      .join("");
+    select.innerHTML =
+      '<option value="" disabled selected>Select…</option>' +
+      options.map((opt) => `<option value="${opt}">${opt}</option>`).join("");
   });
 }
 
