@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Medicine Treatment Cost Estimator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="page-header">
+  <div class="wrap">
+    <span class="rx-mark" aria-hidden="true">℞</span>
+    <div>
+      <h1>Treatment Cost Estimator</h1>
+      <p>Fill in the patient and medicine details to get a predicted payable cost, trained on 5,000 historical treatment records.</p>
+    </div>
+  </div>
+</header>
+
+<main class="wrap layout">
+
+  <form id="cost-form" class="panel form-panel" autocomplete="off">
+
+    <fieldset>
+      <legend>Patient</legend>
+      <div class="grid-2">
+        <label>Age
+          <input type="number" name="Age" min="0" max="120" required />
+        </label>
+        <label>Gender
+          <select name="Gender" required></select>
+        </label>
+        <label>BMI
+          <input type="number" name="BMI" step="0.1" min="10" max="60" required />
+        </label>
+        <label>Chronic condition
+          <select name="Chronic_Condition" required></select>
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Medicine</legend>
+      <div class="grid-2">
+        <label>Medicine name
+          <select name="Medicine_Name" required></select>
+        </label>
+        <label>Category
+          <select name="Category" required></select>
+        </label>
+        <label>Type
+          <select name="Type" required></select>
+        </label>
+        <label>Generic or branded
+          <select name="Generic_or_Branded" required></select>
+        </label>
+        <label>Manufacturer
+          <select name="Manufacturer" required></select>
+        </label>
+        <label>Dosage (mg)
+          <input type="number" name="Dosage_mg" step="1" min="0" required />
+        </label>
+        <label>Quantity
+          <input type="number" name="Quantity" min="1" required />
+        </label>
+        <label>Duration (days)
+          <input type="number" name="Duration_Days" min="1" required />
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Treatment</legend>
+      <div class="grid-2">
+        <label>Severity
+          <select name="Severity" required></select>
+        </label>
+        <label>Treatment type
+          <select name="Treatment_Type" required></select>
+        </label>
+        <label>Region
+          <select name="Region" required></select>
+        </label>
+        <label>Insurance coverage (%)
+          <input type="number" name="Insurance_Pct" min="0" max="100" value="0" required />
+        </label>
+        <label>Discount (%)
+          <input type="number" name="Discount_Pct" min="0" max="100" value="0" required />
+        </label>
+      </div>
+    </fieldset>
+
+    <button type="submit" id="submit-btn">Estimate cost</button>
+    <p id="form-error" class="form-error" role="alert" hidden></p>
+  </form>
+
+  <aside class="panel receipt" id="receipt">
+    <div class="receipt-inner">
+      <p class="receipt-label">Estimated payable cost</p>
+      <p class="receipt-amount" id="amount">₹ —</p>
+      <div class="receipt-divider" aria-hidden="true"></div>
+      <dl class="receipt-lines" id="receipt-lines">
+        <div class="line"><dt>Status</dt><dd>Awaiting details</dd></div>
+      </dl>
+      <p class="receipt-note">Estimate from a Random Forest model — not a guaranteed price. Actual pharmacy or hospital billing may differ.</p>
+    </div>
+  </aside>
+
+</main>
+
+<footer class="page-footer">
+  <p class="wrap">Model trained on historical data · for informational estimates only, not medical or financial advice.</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
