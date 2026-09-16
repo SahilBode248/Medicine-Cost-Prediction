@@ -1,104 +1,66 @@
-# Medicine Treatment Cost Estimator
+Medicine Treatment Cost Estimator
 
-Predicts the **Payable_Cost** of a treatment (Random Forest, R² ≈ 0.93 on held-out
-test data) from patient, medicine, and treatment details — deployable on Vercel
-as static frontend + Python serverless functions.
+Author(s): Sahil Bode
+Affiliation: Rashtrasant Tukadoji Maharaj Nagpur University
+Date: September 2026
 
-## What changed vs. the notebook
+Abstract
 
-The notebook computed `Cost_per_Day`, `Cost_per_Unit`, and used `Total_Cost` in
-the same feature-engineering pipeline as `Payable_Cost`. Those are all derived
-from `Total_Cost`, which is only one arithmetic step from `Payable_Cost` — so
-using them as model inputs leaks the answer and isn't something a real user
-would type into a form anyway. `train_model.py` retrains a model that predicts
-`Payable_Cost` directly from the raw inputs only (age, medicine, dosage,
-quantity, duration, severity, insurance %, discount %, etc.), keeping the
-notebook's `Age_Group` / `BMI_Category` / `Has_Insurance` engineered features
-since those only depend on inputs. This is the version that's actually usable
-in production.
+The Medicine Treatment Cost Estimator is a machine learning project designed to predict the payable cost of medical treatment based on patient, medicine, and treatment-related details. The system uses a Random Forest Regression model trained on features such as age, BMI, medicine name, dosage, quantity, treatment duration, severity, insurance percentage, and discount percentage. The model achieved an R² score of approximately 0.93 on held-out test data, indicating strong predictive performance. A web-based interface allows users to enter treatment information and receive an estimated payable cost. The application uses a static frontend with Python-based serverless API functions and can be deployed on Vercel.
 
-## Project structure
+Introduction
 
-```
-├── api/
-│   ├── predict.py       # POST /api/predict  -> {"predicted_payable_cost": ...}
-│   └── metadata.py      # GET  /api/metadata -> dropdown options for the form
-├── model/
-│   ├── model.joblib      # trained sklearn Pipeline (preprocessing + RandomForest)
-│   ├── metadata.json     # dropdown options / numeric ranges (generated)
-│   └── metrics.json      # MAE / RMSE / R2 on the test set (generated)
-├── public/
-│   ├── index.html
-│   ├── style.css
-│   └── script.js
-├── train_model.py         # regenerates everything in model/
-├── requirements.txt
-├── vercel.json
-└── data.csv                # training data (only needed to retrain)
-```
+Medical treatment costs can vary depending on medicines, dosage, treatment duration, patient characteristics, insurance coverage, and discounts. Estimating the payable amount manually can be difficult. This project aims to develop a machine learning-based system that estimates treatment cost from user-provided information. It provides a simple web interface where users can enter patient and treatment details and receive an estimated payable cost.
 
-## Deploy to Vercel
+Literature Review
 
-1. Push this folder to a GitHub repo.
-2. In Vercel: **New Project → Import** the repo. Framework preset: "Other".
-   No build command needed — `public/` is served as static files and
-   everything in `api/` is auto-detected as Python serverless functions.
-3. Deploy. Your form will be at `/`, the API at `/api/predict` and `/api/metadata`.
+Machine learning regression techniques are widely used for predicting numerical values such as healthcare expenses. Algorithms including Linear Regression, Decision Trees, Random Forest, and Gradient Boosting can be applied to healthcare cost prediction. Random Forest is useful because it can capture nonlinear relationships between multiple patient and treatment features. Feature engineering can further improve prediction performance by creating meaningful features from available input data.
 
-That's it — no environment variables or extra config required.
+Methodology
 
-## Run locally
+The system accepts patient, medicine, and treatment details as input. The data is preprocessed using numerical and categorical feature handling, along with engineered features such as Age_Group, BMI_Category, and Has_Insurance. A Random Forest Regression model is trained using only raw user-input features and valid engineered features to avoid data leakage. The trained model is stored using Joblib and loaded by the Python API during prediction. The web frontend sends user inputs to the API, which returns the estimated Payable_Cost.
 
-```bash
-npm install -g vercel      # if you don't already have the CLI
-vercel dev
-```
+Implementation
+Programming Languages
+Python
+HTML
+CSS
+JavaScript
+Frameworks/Libraries
+Pandas
+NumPy
+Scikit-learn
+Joblib
+Tools Used
+Google Colab / Jupyter Notebook
+VS Code
+GitHub
+Vercel
+Results and Discussion
 
-This serves the static site and both Python functions on `localhost:3000`
-exactly like production.
+The Random Forest model achieved an R² score of approximately 0.93 on the held-out test data. The system predicts the payable treatment cost using patient, medicine, dosage, quantity, duration, severity, insurance, and discount information. The web application provides predictions through a simple user interface and Python serverless API.
 
-## Retraining the model
+Limitation
+Prediction accuracy depends on the quality and representativeness of the training dataset.
+The model provides an estimated cost and not an actual medical bill.
+Unusual medicines or treatment combinations may produce less reliable predictions.
+Healthcare prices can vary between hospitals, regions, and time periods.
+The system does not provide medical diagnosis or treatment recommendations.
+Future Scope
+Add larger and more diverse healthcare datasets.
+Include hospital and location-specific pricing.
+Improve the model using advanced ensemble and deep learning techniques.
+Add prediction confidence or estimated cost ranges.
+Develop a mobile application.
+Integrate regularly updated medicine and treatment prices.
+Conclusion
 
-```bash
-pip install -r requirements.txt
-python train_model.py
-```
+The Medicine Treatment Cost Estimator demonstrates how machine learning can be applied to estimate medical treatment expenses. By using patient, medicine, and treatment-related information with a Random Forest regression model, the system provides an automated estimate of payable cost. The web-based implementation makes the prediction system accessible through a simple user interface and demonstrates a practical application of machine learning in healthcare cost estimation.
 
-This overwrites `model/model.joblib`, `model/metadata.json`, and
-`model/metrics.json`. Commit the updated `model/` folder — the API loads the
-`.joblib` file directly, it doesn't retrain on request.
+References
 
-## ⚠️ A known Vercel constraint
-
-Vercel Python serverless functions have a **250 MB unzipped size limit**.
-`scikit-learn` + `pandas` + `numpy` + `scipy` (scikit-learn's own dependency)
-together can get close to that ceiling. This project has been kept as lean as
-possible (one shared `model.joblib`, no unused dependencies), and it's within
-the range where these ML-on-Vercel deployments commonly work — but if your
-Vercel build fails with a size/bundle error, you have two easy fallbacks:
-
-- **Split the deployment**: keep the frontend (`public/`) on Vercel, and host
-  just `api/predict.py` + `model/` as a tiny Flask/FastAPI app on a Python-friendly
-  host like Render, Railway, or Fly.io (all have generous free tiers). Then
-  point `script.js`'s `fetch("/api/predict")` calls at that host's URL instead.
-- **Convert the model to ONNX** with `skl2onnx` and swap `scikit-learn` for
-  `onnxruntime` at inference time — `onnxruntime` alone is a fraction of the
-  size of `scikit-learn` + `scipy`, which reliably resolves the limit. Ask if
-  you'd like this version built out.
-
-## API reference
-
-**POST `/api/predict`**
-```json
-{
-  "Age": 52, "Gender": "Female", "BMI": 24.8, "Chronic_Condition": "No",
-  "Medicine_Name": "Montelukast", "Category": "Respiratory", "Type": "Tablet",
-  "Generic_or_Branded": "Generic", "Manufacturer": "Sun Pharma",
-  "Dosage_mg": 10, "Quantity": 40, "Duration_Days": 20, "Severity": "Mild",
-  "Treatment_Type": "Specialized Treatment", "Region": "South",
-  "Insurance_Pct": 40, "Discount_Pct": 11
-}
-```
-→ `{"predicted_payable_cost": 1368.62}`
-
-**GET `/api/metadata`** → dropdown options and numeric ranges used to build the form.
+[1] L. Breiman, "Random Forests," Machine Learning, 2001.
+[2] F. Pedregosa et al., "Scikit-learn: Machine Learning in Python," Journal of Machine Learning Research, 2011.
+[3] Scikit-learn Documentation.
+[4] Pandas Documentation.
+[5] Vercel Documentation.
