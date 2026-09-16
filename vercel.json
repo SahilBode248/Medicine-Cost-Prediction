@@ -1,5 +1,9 @@
 {
   "functions": {
+    "api/index.py": {
+      "memory": 1024,
+      "maxDuration": 15
+    },
     "api/predict.py": {
       "memory": 1024,
       "maxDuration": 15
